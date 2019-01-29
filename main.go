@@ -12,21 +12,15 @@ import (
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-/*
-[
-	{"id":"80", "price":90000.233, "rule":"gt"},
-]
-*/
-
-//Crypto structure used for JSON
+//Crypto structure used for API JSON
 type Crypto struct {
 	ID    string  `json:"id"`
 	Name  string  `json:"name"`
 	Price float64 `json:"price_usd"`
 }
 
-//APSIRASYTI
-type CryptoRules struct {
+//CryptoRule structure used for JSON from file
+type CryptoRule struct {
 	ID    string  `json:"id"`
 	Price float64 `json:"price"`
 	Rule  string  `json:"rule"`
@@ -34,127 +28,138 @@ type CryptoRules struct {
 
 const URL = "https://api.coinlore.com/api/ticker/?id=90"
 const File = "CryptoInfo.json"
+const token = "717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk"
 
 //APSIRASYTI
 func main() {
+	var (
+		CryptoC     Crypto
+		CryptoRules []CryptoRule
+		err         error
+	)
 
-	var CryptoC Crypto
-	var CryptoRules []CryptoRules
-	var err error
-	//!!Pasikeisti
-	//	if _, err := http.Get("https://api.telegram.org/bot717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk/sendMessage?chat_id=@CryptTelegram&text=Hello"); err != nil {
-	//		fmt.Println(err)
-	//	}
-	//KAS CIA VYKSTA APRASYTI
 	if CryptoC, err = FromURL(URL); err != nil {
-		//	fmt.Println(errStart.Error())
 		log.Fatal(err)
 	}
-
-	//for _, value := range CryptoC {
-	fmt.Println(CryptoC)
-	//}
-	//KAS CIA VYKSTA APRASYTI
 	if CryptoRules, err = FromFile(File); err != nil {
-		//	fmt.Println(errStart.Error())
 		log.Fatal(err)
 	}
 
-	//	json.Unmarshal(byteValue, &CryptInfo)
-	var Price float64
-	for _, x := range CryptoRules {
-		fmt.Printf("%s \n", x.Rule)
-		Price = x.Price
+	bot, err := telegram.NewBotAPI(token)
+	if err != nil {
+		log.Fatal(err)
 	}
-	//Tikrinu duomenis pagal taisykle is failo
-	if Price > CryptoC.Price {
-		//Authenticatinu BOTa Uztenka viena karta prie MAIN
-		bot, err := telegram.NewBotAPI("717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk")
-		log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-		if err != nil {
-			log.Panic(err)
-		}
-
-		//Botas printina zinute i kanala
-		text := fmt.Sprintf("%s is running. %s price has increased!", bot.Self.UserName, CryptoC.Name)
+	for _, r := range CheckAll(CryptoC, CryptoRules) {
+		s := status(r)
+		text := fmt.Sprintf("%s is running. %s price has %s!", bot.Self.UserName, CryptoC.Name, s)
 		msg := telegram.NewMessageToChannel("@CryptTelegram", text)
 		bot.Send(msg)
 	}
-
 }
 
-//func CheckIt()
+//Checking the rule and returning string
+func status(r CryptoRule) string {
+	var s string
 
-//Nuskaitau JSON is failo su crypto currency info ATSKIRA FUNKCIJA
-func FromFile(FileName string) ([]CryptoRules, error) {
-	var CryptInfo []CryptoRules
-	var err error
-	var jsonFile []byte
-
-	if jsonFile, err = ioutil.ReadFile(FileName); err != nil {
-		// if we os.Open returns an error then handle it
-		return CryptInfo, err
+	if r.Rule == "gt" {
+		s = "increased"
+	}
+	if r.Rule == "lw" {
+		s = "decreased"
 	}
 
+	return s
+}
+
+//CheckAll funcion goes through the array of rules from the file and makes a list of rules that were approved with CheckOne funcion
+func CheckAll(c Crypto, r []CryptoRule) []CryptoRule {
+	var a []CryptoRule
+
+	for _, x := range r {
+		if CheckOne(c, x) == true {
+			a = append(a, x)
+		}
+	}
+
+	return a
+}
+
+//Checking data received from URL with the data from file according to the rule provided in the file, returning true/false
+func CheckOne(c Crypto, r CryptoRule) bool {
+
+	if r.ID == c.ID {
+		if r.Rule == "gt" && r.Price > c.Price {
+			return true
+		}
+		if r.Rule == "lw" && r.Price < c.Price {
+			return true
+		}
+	}
+
+	return false
+}
+
+//FromFile funcion read a file and unmarshals JSON from the file
+func FromFile(FileName string) ([]CryptoRule, error) {
+	var (
+		CryptInfo []CryptoRule
+		err       error
+		jsonFile  []byte
+	)
+
+	if jsonFile, err = ioutil.ReadFile(FileName); err != nil {
+		return CryptInfo, err
+	}
 	if err = json.Unmarshal(jsonFile, &CryptInfo); err != nil {
 		return CryptInfo, err
 	}
+
 	return CryptInfo, err
 }
 
 // Function FromURL takes URL address of a JSON, unmarshals JSON and return the data
 func FromURL(URLName string) (Crypto, error) {
-	spaceClient := http.Client{
-		Timeout: time.Second * 10, // 2 secs
-	}
 	type CryptoJSON struct {
 		ID    string `json:"id"`
 		Name  string `json:"name"`
 		Price string `json:"price_usd"`
 	}
-	exrates := Crypto{}
-	CrypJson := []CryptoJSON{}
 
-	var err error
-	var req *http.Request
-	var res *http.Response
-	var body []byte
+	var (
+		err      error
+		req      *http.Request
+		res      *http.Response
+		body     []byte
+		CrypJson []CryptoJSON
+	)
 
-	//	717631082:AAEa0BNtLs8tJ-DnoWTbCk1Y2i6mawum3jk
+	spaceClient := http.Client{
+		Timeout: time.Second * 10, // 2 secs
+	}
 
 	if req, err = http.NewRequest(http.MethodGet, URLName, nil); err != nil {
-		return exrates, err
-		//fmt.Println(err.Error())
+		return Crypto{}, err
 	}
 	if res, err = spaceClient.Do(req); err != nil {
-		return exrates, err
-		//log.Fatal(getErr)
+		return Crypto{}, err
 	}
 	if body, err = ioutil.ReadAll(res.Body); err != nil {
-		return exrates, err
-		//
+		return Crypto{}, err
 	}
-	//exrates := ExRates{}
-	// json.Unmarshal(content, &friends)
 	if err = json.Unmarshal(body, &CrypJson); err != nil {
-		return exrates, err
+		return Crypto{}, err
 	}
-	//!!PASIDARYTI
-	// if len != 1 {fail}
 	if len(CrypJson) != 1 {
-		log.Fatal(err)
+		return Crypto{}, err
 	}
-	exrates.ID = CrypJson[0].ID
-	exrates.Name = CrypJson[0].Name
 
-	f := CrypJson[0].Price
+	p, _ := strconv.ParseFloat(CrypJson[0].Price, 64)
 
-	if s, err := strconv.ParseFloat(f, 64); err == nil {
-		//	fmt.Println(s) // 3.14159265
-		exrates.Price = s
-	}
-	//realrate := Crypro{Price: flat(exrates[0].price_usd)}
-
-	return exrates, nil
+	return Crypto{
+		ID:    CrypJson[0].ID,
+		Name:  CrypJson[0].Name,
+		Price: p,
+	}, nil
 }
