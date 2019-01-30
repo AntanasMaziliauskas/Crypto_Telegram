@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	crypto "github.com/AntanasMaziliauskas/Crypto_Telegram/crypto"
+	crypto "github.com/Crypto_Telegram/crypto"
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
@@ -21,7 +21,8 @@ func main() {
 	)
 	crypto.Init()
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGKILL)
+	//signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGKILL)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 
 	bot, err := telegram.NewBotAPI(crypto.Token)
 	if err != nil {

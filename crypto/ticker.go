@@ -49,11 +49,12 @@ func PriceChecker(urls []string, rules []CryptoRule) {
 					continue
 				}
 				for _, r := range kint {
-					text := fmt.Sprintf("%s price has %s!", CryptoC.Name, Status(r))
+					text := fmt.Sprintf("%s price has %s! It is %v USD now!", CryptoC.Name, Status(r), CryptoC.Price)
 					log.Printf("Sending text to %s\n", url)
 					Msg <- text
 					//siunciam text i kanala
 				}
+				rules = Notify(rules, kint)
 			}
 		}
 	}

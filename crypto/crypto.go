@@ -18,6 +18,7 @@ type Crypto struct {
 
 //CryptoRule structure used for JSON from file
 type CryptoRule struct {
+	RuleID   int     `json:rule_id`
 	ID       string  `json:"id"`
 	Price    float64 `json:"price"`
 	Rule     string  `json:"rule"`
@@ -42,12 +43,31 @@ func Status(r CryptoRule) string {
 	return s
 }
 
+//Aprasas
+func Notify(real []CryptoRule, print []CryptoRule) []CryptoRule {
+	var a []CryptoRule
+
+	for _, x := range print {
+		for _, v := range real {
+			if x.RuleID == v.RuleID {
+				v.Notified = true
+			}
+			if v.Notified != true {
+				a = append(a, v)
+			}
+		}
+	}
+
+	return a
+}
+
 //CheckAll funcion goes through the array of rules from the file and makes a list of rules that were approved with CheckOne funcion
 func CheckAll(c Crypto, r []CryptoRule) []CryptoRule {
 	var a []CryptoRule
 
 	for _, x := range r {
-		if CheckOne(c, x) {
+		if CheckOne(c, x) && x.Notified != true {
+			//	x.Notified = true
 			a = append(a, x)
 		}
 	}
