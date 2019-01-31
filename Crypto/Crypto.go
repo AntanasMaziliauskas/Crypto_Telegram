@@ -1,4 +1,4 @@
-package crypto
+package Crypto
 
 import (
 	"encoding/json"
@@ -9,6 +9,14 @@ import (
 	"time"
 )
 
+type Application struct {
+	Crypto     Crypto
+	CryptoRule []CryptoRule
+	URL        string
+	File       string
+	Token      string
+}
+
 //Crypto structure used for API JSON
 type Crypto struct {
 	ID    string  `json:"id"`
@@ -18,7 +26,7 @@ type Crypto struct {
 
 //CryptoRule structure used for JSON from file
 type CryptoRule struct {
-	RuleID   int     `json:rule_id`
+	RuleID   int     `json:ruleid`
 	ID       string  `json:"id"`
 	Price    float64 `json:"price"`
 	Rule     string  `json:"rule"`
@@ -29,7 +37,7 @@ const URL = "https://api.coinlore.com/api/ticker/?id=%s"
 const File = "CryptoInfo.json"
 const Token = "717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk"
 
-//Checking the rule and returning string
+//Checking the rule and returning string -->> CRYPTO
 func Status(r CryptoRule) string {
 	var s string
 
@@ -43,22 +51,35 @@ func Status(r CryptoRule) string {
 	return s
 }
 
-//Aprasas
-func Notify(real []CryptoRule, print []CryptoRule) []CryptoRule {
-	var a []CryptoRule
+//WriteToFile function writes the data into the file -->> CRYPTO
+func WriteToFile(edited []CryptoRule) error {
 
-	for _, x := range print {
-		for _, v := range real {
-			if x.RuleID == v.RuleID {
-				v.Notified = true
+	tofile, _ := json.Marshal(edited)
+	if err := ioutil.WriteFile(File, tofile, 0644); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//Notify function reads through the rules list and changes Notified value if the rule has been possted already.
+//Creates new list of rules that passes back. -->> CRYPTO
+func Notify(real []CryptoRule, printed []CryptoRule) []CryptoRule {
+	var edited []CryptoRule
+
+	if printed == nil {
+		return real
+	}
+	for _, pr := range printed {
+		for _, re := range real {
+			if pr.RuleID == re.RuleID {
+				re.Notified = true
 			}
-			if v.Notified != true {
-				a = append(a, v)
-			}
+			edited = append(edited, re)
 		}
 	}
 
-	return a
+	return edited
 }
 
 //CheckAll funcion goes through the array of rules from the file and makes a list of rules that were approved with CheckOne funcion
@@ -67,7 +88,6 @@ func CheckAll(c Crypto, r []CryptoRule) []CryptoRule {
 
 	for _, x := range r {
 		if CheckOne(c, x) && x.Notified != true {
-			//	x.Notified = true
 			a = append(a, x)
 		}
 	}
@@ -91,14 +111,19 @@ func CheckOne(c Crypto, r CryptoRule) bool {
 }
 
 //FromFile funcion read a file and unmarshals JSON from the file
-func FromFile(FileName string) ([]CryptoRule, error) {
+func (a *Application) FromFile() ([]CryptoRule, error) {
+
+	// Init() { ..
+	// a.CryptoRules = a.Crypto.ReadRules()
+	// }
+
 	var (
 		CryptInfo []CryptoRule
 		err       error
 		jsonFile  []byte
 	)
 
-	if jsonFile, err = ioutil.ReadFile(FileName); err != nil {
+	if jsonFile, err = ioutil.ReadFile(a.File); err != nil {
 		return CryptInfo, err
 	}
 	if err = json.Unmarshal(jsonFile, &CryptInfo); err != nil {
@@ -109,10 +134,10 @@ func FromFile(FileName string) ([]CryptoRule, error) {
 }
 
 //APRASAS
-func URLID(r []CryptoRule) []string {
+func (a *Application) URLID() []string {
 	var urls []string
 
-	for _, v := range r {
+	for _, v := range a.CryptoRule {
 		url := fmt.Sprintf(URL, v.ID)
 		if !SliceContainsString(url, urls) {
 			urls = append(urls, url)
