@@ -11,6 +11,12 @@ import (
 
 //Program is designed to get the information of the specific crypto currency and compare it against data in file.
 //According to the rules, Telegram bot would notify users in the specific channel if the crypto currency price has increased of decreased.
+/*
+
+
+
+
+ */
 func main() {
 
 	app := application.App{
@@ -29,4 +35,9 @@ func main() {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGKILL)
 	<-stop
+
+	select {
+	case <-stop:
+		app.stop
+	}
 }

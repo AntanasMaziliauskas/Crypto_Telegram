@@ -17,6 +17,7 @@ type App struct {
 
 //Stop Funkcija --->>STOP
 func (a *App) Stop() {
+
 }
 
 //Authenticate function authenticates Telegram bot with the given token and print out authentication message
