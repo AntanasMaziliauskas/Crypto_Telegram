@@ -1,25 +1,25 @@
-package Crypto_test
+package crypto_test
 
 import (
 	"testing"
 
-	Crypto "github.com/AntanasMaziliauskas/Crypto_Telegram/Crypto"
+	"github.com/AntanasMaziliauskas/Crypto_Telegram/crypto"
 	"github.com/influxdata/influxdb/pkg/testing/assert"
 )
 
 func TestCheckOne(t *testing.T) {
 	testTable := []struct {
-		crypt  Crypto.Crypto
-		rule   Crypto.CryptoRule
+		crypt  crypto.Crypto
+		rule   crypto.CryptoRule
 		expect bool
 	}{
 		{
-			crypt: Crypto.Crypto{
+			crypt: crypto.Crypto{
 				ID:    "90",
 				Name:  "Bitcoin",
 				Price: 3396.06,
 			},
-			rule: Crypto.CryptoRule{
+			rule: crypto.CryptoRule{
 				ID:    "90",
 				Price: 3000.01,
 				Rule:  "gt",
@@ -27,12 +27,12 @@ func TestCheckOne(t *testing.T) {
 			expect: true,
 		},
 		{
-			crypt: Crypto.Crypto{
+			crypt: crypto.Crypto{
 				ID:    "80",
 				Name:  "Ethereum",
 				Price: 104.38,
 			},
-			rule: Crypto.CryptoRule{
+			rule: crypto.CryptoRule{
 				ID:    "90",
 				Price: 2222.22,
 				Rule:  "lw",
@@ -40,12 +40,12 @@ func TestCheckOne(t *testing.T) {
 			expect: false,
 		},
 		{
-			crypt: Crypto.Crypto{
+			crypt: crypto.Crypto{
 				ID:    "80",
 				Name:  "Ethereum",
 				Price: 104.38,
 			},
-			rule: Crypto.CryptoRule{
+			rule: crypto.CryptoRule{
 				ID:    "80",
 				Price: 110.22,
 				Rule:  "lw",
@@ -60,17 +60,17 @@ func TestCheckOne(t *testing.T) {
 }
 func TestCheckAll(t *testing.T) {
 	testTable := []struct {
-		crypt  Crypto.Crypto
-		rule   []Crypto.CryptoRule
-		expect []Crypto.CryptoRule
+		crypt  crypto.Crypto
+		rule   []crypto.CryptoRule
+		expect []crypto.CryptoRule
 	}{
 		{
-			crypt: Crypto.Crypto{
+			crypt: crypto.Crypto{
 				ID:    "90",
 				Name:  "Bitcoin",
 				Price: 3396.06,
 			},
-			rule: []Crypto.CryptoRule{
+			rule: []crypto.CryptoRule{
 				{
 					ID:       "90",
 					Price:    3000.01,
@@ -86,12 +86,12 @@ func TestCheckAll(t *testing.T) {
 			expect: nil,
 		},
 		{
-			crypt: Crypto.Crypto{
+			crypt: crypto.Crypto{
 				ID:    "90",
 				Name:  "Bitcoin",
 				Price: 3396.06,
 			},
-			rule: []Crypto.CryptoRule{
+			rule: []crypto.CryptoRule{
 				{
 					ID:    "80",
 					Price: 3000.01,
@@ -106,12 +106,12 @@ func TestCheckAll(t *testing.T) {
 			expect: nil,
 		},
 		{
-			crypt: Crypto.Crypto{
+			crypt: crypto.Crypto{
 				ID:    "80",
 				Name:  "Ethereum",
 				Price: 104.38,
 			},
-			rule: []Crypto.CryptoRule{
+			rule: []crypto.CryptoRule{
 				{
 					ID:    "80",
 					Price: 100.01,
@@ -123,7 +123,7 @@ func TestCheckAll(t *testing.T) {
 					Rule:  "lw",
 				},
 			},
-			expect: []Crypto.CryptoRule{
+			expect: []crypto.CryptoRule{
 				{
 					ID:    "80",
 					Price: 100.01,
@@ -144,12 +144,12 @@ func TestCheckAll(t *testing.T) {
 }
 func TestNotify(t *testing.T) {
 	testTable := []struct {
-		real   []Crypto.CryptoRule
-		sent   []Crypto.CryptoRule
-		edited []Crypto.CryptoRule
+		real   []crypto.CryptoRule
+		sent   []crypto.CryptoRule
+		edited []crypto.CryptoRule
 	}{
 		{
-			real: []Crypto.CryptoRule{
+			real: []crypto.CryptoRule{
 				{
 					RuleID:   0,
 					ID:       "90",
@@ -170,7 +170,7 @@ func TestNotify(t *testing.T) {
 					Rule:   "lw",
 				},
 			},
-			sent: []Crypto.CryptoRule{
+			sent: []crypto.CryptoRule{
 				{
 					RuleID:   1,
 					ID:       "80",
@@ -179,7 +179,7 @@ func TestNotify(t *testing.T) {
 					Notified: true,
 				},
 			},
-			edited: []Crypto.CryptoRule{
+			edited: []crypto.CryptoRule{
 				{
 					RuleID:   0,
 					ID:       "90",
@@ -203,7 +203,7 @@ func TestNotify(t *testing.T) {
 			},
 		},
 		{
-			real: []Crypto.CryptoRule{
+			real: []crypto.CryptoRule{
 				{
 					RuleID: 0,
 					ID:     "90",
@@ -223,7 +223,7 @@ func TestNotify(t *testing.T) {
 					Rule:   "lw",
 				},
 			},
-			sent: []Crypto.CryptoRule{
+			sent: []crypto.CryptoRule{
 				{
 					RuleID:   1,
 					ID:       "80",
@@ -232,7 +232,7 @@ func TestNotify(t *testing.T) {
 					Notified: true,
 				},
 			},
-			edited: []Crypto.CryptoRule{
+			edited: []crypto.CryptoRule{
 				{
 					RuleID:   0,
 					ID:       "90",
@@ -256,7 +256,7 @@ func TestNotify(t *testing.T) {
 			},
 		},
 		{
-			real: []Crypto.CryptoRule{
+			real: []crypto.CryptoRule{
 				{
 					RuleID:   0,
 					ID:       "90",
@@ -280,7 +280,7 @@ func TestNotify(t *testing.T) {
 				},
 			},
 			sent: nil,
-			edited: []Crypto.CryptoRule{
+			edited: []crypto.CryptoRule{
 				{
 					RuleID:   0,
 					ID:       "90",
@@ -310,3 +310,15 @@ func TestNotify(t *testing.T) {
 		assert.Equal(t, result, v.edited, "Case %d", i)
 	}
 }
+
+/*
+var Zirafe struct {
+	Ugis int
+}
+
+func TestZirafa(t *testing.T) {
+	x := Zirafe{180}
+	x.Paaugo(5)
+	assert.Equal(t, x.Ugis, 185)
+}
+*/
