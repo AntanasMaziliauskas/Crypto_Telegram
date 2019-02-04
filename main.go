@@ -6,7 +6,8 @@ import (
 	"syscall"
 
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/application"
-	"github.com/AntanasMaziliauskas/Crypto_Telegram/crypto"
+	"github.com/AntanasMaziliauskas/Crypto_Telegram/rules"
+	//	"github.com/AntanasMaziliauskas/Crypto_Telegram/crypto"
 )
 
 //Program is designed to get the information of the specific crypto currency and compare it against data in file.
@@ -17,15 +18,27 @@ import (
 
 
  */
+//TODO: Tokena constant isideti
 func main() {
 
+	fileHanlder = &rules.RulesFromJSON{
+		Path: "rules.json",
+	}
+	if flag.xml {
+		fileHanlder = &rules.RulesFromXML{
+			Path: "rules.json",
+		}
+	}
+
+
 	app := application.App{
-		Token: crypto.Token,
-		CS: crypto.CryptoStruct{
-			File: crypto.File,
-			URL:  crypto.URL,
-			Msg:  make(chan string),
-		},
+		//	Token: crypto.Token,
+		//	CS: crypto.CryptoStruct{
+		//		File: crypto.File,
+		//		URL:  crypto.URL,
+		//		Msg:  make(chan string),
+		//	},
+		Rules: fileHanlder
 	}
 
 	app.Init()
@@ -36,8 +49,4 @@ func main() {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGKILL)
 	<-stop
 
-	select {
-	case <-stop:
-		app.stop
-	}
 }
