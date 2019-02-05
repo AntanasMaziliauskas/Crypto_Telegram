@@ -5,10 +5,10 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 )
 
-const File = "CryptoInfo.json"
+//const File = "CryptoInfo.json"
 
 type RulesService interface {
-	Init()
+	Init() error
 	ReadRules() ([]types.Rule, error)
 	SaveRules([]types.Rule) error
 	Match([]types.Rule, []types.LoreData) []types.Rule

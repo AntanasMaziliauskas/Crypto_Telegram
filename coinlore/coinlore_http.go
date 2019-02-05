@@ -16,8 +16,12 @@ type CoinloreAPI struct {
 	sourceURL string
 }
 
-func (c *CoinloreAPI) Init() {
+func (c *CoinloreAPI) Init() error {
+	//var err error
+
 	c.sourceURL = URL
+
+	return nil
 }
 
 // Function FromURL takes URL address of a JSON, unmarshals JSON and return the data
@@ -63,18 +67,24 @@ func (c *CoinloreAPI) FetchAll(ids []string) ([]types.LoreData, error) {
 		}
 		if len(CrypJson) < 1 {
 			//	fmt.Println("#4")
-			return nil, errors.New("Json empty")
+			err = errors.New("Json empty")
+			//TODO: Sita vieta kazkas negerai
+			return DataFromURL, err
 		}
 		//fmt.Println("#praejau")
-		//fmt.Println(len(CrypJson))
+		//fmt.Println("CrypJson: ", CrypJson)
 		p, _ := strconv.ParseFloat(CrypJson[0].Price, 64)
+		//fmt.Println("Converted price: ", p)
 
 		DataFromURL = append(DataFromURL, types.LoreData{
 			ID:    CrypJson[0].ID,
 			Name:  CrypJson[0].Name,
 			Price: p,
 		})
+		//	fmt.Println("DataFromURL: ", DataFromURL)
 	}
+	//fmt.Println("DataFromURL: ", DataFromURL)
+
 	return DataFromURL, err
 }
 

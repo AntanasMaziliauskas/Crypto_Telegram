@@ -9,11 +9,14 @@ import (
 )
 
 type RulesFromJSON struct {
-	fileName string
+	Path string
 }
 
-func (r *RulesFromJSON) Init() {
-	r.fileName = File
+func (r *RulesFromJSON) Init() error {
+	//var err error
+	//r.fileName = File
+
+	return nil
 }
 
 //ReadRules function read throught the file and unmarshals JSON
@@ -24,7 +27,7 @@ func (r *RulesFromJSON) ReadRules() ([]types.Rule, error) {
 		jsonFile  []byte
 	)
 
-	if jsonFile, err = ioutil.ReadFile(r.fileName); err != nil {
+	if jsonFile, err = ioutil.ReadFile(r.Path); err != nil {
 		return nil, err
 	}
 	if err = json.Unmarshal(jsonFile, &CryptInfo); err != nil {
@@ -42,7 +45,7 @@ func (r *RulesFromJSON) Match(rules []types.Rule, data []types.LoreData) []types
 
 	for _, d := range data {
 		for _, x := range rules {
-			if r.One(d, x) && !x.Notified {
+			if r.One(x, d) && !x.Notified {
 				matched = append(matched, x)
 			}
 		}
@@ -55,7 +58,7 @@ func (r *RulesFromJSON) Match(rules []types.Rule, data []types.LoreData) []types
 }
 
 //One function checks if data from API matched specific rule
-func (r *RulesFromJSON) One(data types.LoreData, rule types.Rule) bool {
+func (r *RulesFromJSON) One(rule types.Rule, data types.LoreData) bool {
 	if data.ID == rule.ID {
 		if rule.Rule == "gt" && rule.Price < data.Price {
 			return true
@@ -78,5 +81,5 @@ func (r *RulesFromJSON) SaveRules(updatedRules []types.Rule) error {
 	if tofile, err = json.Marshal(updatedRules); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(r.fileName, tofile, 0644)
+	return ioutil.WriteFile(r.Path, tofile, 0644)
 }

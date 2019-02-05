@@ -7,7 +7,7 @@ const URL = "https://api.coinlore.com/api/ticker/?id=%s"
 type CoinloreService interface {
 	Init() error
 	FetchAll(ids []string) ([]types.LoreData, error)
-	FetchOne(id string) (types.LoreData, error)
+	//TODO: Apsirasyti funkcija	FetchOne(id string) (types.LoreData, error)
 }
 
 // SliceContainsString will return true if needle has been found in haystack.
