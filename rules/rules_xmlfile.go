@@ -10,8 +10,10 @@ import (
 
 type RulesFromXML struct {
 	Path string
-	//	XMLName xml.Name     `xml:"rule"`
-	Rules []types.Rule `xml:"rule"`
+}
+type XML struct {
+	XMLName xml.Name     `xml:"rules"`
+	Rules   []types.Rule `xml:"rule"`
 }
 
 func (r *RulesFromXML) Init() error {
@@ -21,7 +23,7 @@ func (r *RulesFromXML) Init() error {
 
 func (r *RulesFromXML) ReadRules() ([]types.Rule, error) {
 	var (
-		xmlRules RulesFromXML
+		xmlRules XML
 		err      error
 		xmlFile  []byte
 	)
@@ -69,11 +71,13 @@ func (r *RulesFromXML) One(rule types.Rule, data types.LoreData) bool {
 
 func (r *RulesFromXML) SaveRules(updatedRules []types.Rule) error {
 	var (
-		err    error
-		tofile []byte
+		err          error
+		tofile       []byte
+		rulesToWrite XML
 	)
+	rulesToWrite.Rules = updatedRules
 
-	if tofile, err = xml.Marshal(updatedRules); err != nil {
+	if tofile, err = xml.Marshal(rulesToWrite); err != nil {
 		return err
 	}
 	return ioutil.WriteFile(r.Path, tofile, 0644)

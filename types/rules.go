@@ -17,6 +17,7 @@ type LoreData struct {
 	Price float64 `json:"price_usd"`
 }
 
+/*
 //RuleXML is fetched from XML
 type RuleXML struct {
 	RuleID   string ``
@@ -25,3 +26,4 @@ type RuleXML struct {
 	Rule     string `xml:"rule"`
 	Notified string `xml:"notified"`
 }
+*/
