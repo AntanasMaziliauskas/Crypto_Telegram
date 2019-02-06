@@ -19,10 +19,10 @@ import (
 func main() {
 	var fileHandler rules.RulesService
 
-	path := flag.String("path", "rules", "a string")
-	typ := flag.Bool("type", false, "a bool")
-	token := flag.String("token", "717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk", "a string")
-	channel := flag.String("channel", "@CryptTelegram", "a string")
+	path := flag.String("path", "rules", "a path with the file name for reading rules")
+	typ := flag.Bool("type", false, "File type. For JSON type set 'false', for XML type set 'true'; default 'false'")
+	token := flag.String("token", "717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk", "a token that is used to authenticate Telegram bot")
+	channel := flag.String("channel", "@CryptTelegram", "Telegram channel name that's being used for sending messages")
 	flag.Parse()
 
 	fileHandler = &rules.RulesFromJSON{

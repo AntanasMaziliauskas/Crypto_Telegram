@@ -8,7 +8,7 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 )
 
-//RulesFromJSON structure
+//RulesFromJSON structure holds path of file and implements RulesService interface
 type RulesFromJSON struct {
 	Path string
 }
