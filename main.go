@@ -14,18 +14,16 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/application"
 )
 
-//const Token = "717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk"
-
 //Program is designed to get the information of the specific crypto currency and compare it against data in file.
 //According to the rules, Telegram bot would notify users in the specific channel if the crypto currency price has increased of decreased.
 func main() {
+	var fileHandler rules.RulesService
 
 	path := flag.String("path", "rules", "a string")
 	typ := flag.Bool("type", false, "a bool")
 	token := flag.String("token", "717631082:AAEaOBNtLs8tJ-DnoWTbCk1Y2i6mawum3jk", "a string")
 	channel := flag.String("channel", "@CryptTelegram", "a string")
 	flag.Parse()
-	var fileHandler rules.RulesService
 
 	fileHandler = &rules.RulesFromJSON{
 		Path: fmt.Sprintf("%s.json", *path),
@@ -50,9 +48,8 @@ func main() {
 	app.Go()
 
 	stop := make(chan os.Signal, 1)
-	//TODO: pasikeisti sita
-	//signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGKILL)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGSTOP, syscall.SIGKILL)
+
 	<-stop
 
 }

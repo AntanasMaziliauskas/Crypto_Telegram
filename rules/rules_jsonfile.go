@@ -8,18 +8,18 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 )
 
+//RulesFromJSON structure
 type RulesFromJSON struct {
 	Path string
 }
 
+//Init function does nothing
 func (r *RulesFromJSON) Init() error {
-	//var err error
-	//r.fileName = File
 
 	return nil
 }
 
-//ReadRules function read throught the file and unmarshals JSON
+//ReadRules function read throught the JSON file and unmarshals it
 func (r *RulesFromJSON) ReadRules() ([]types.Rule, error) {
 	var (
 		CryptInfo []types.Rule
@@ -35,10 +35,9 @@ func (r *RulesFromJSON) ReadRules() ([]types.Rule, error) {
 	}
 
 	return CryptInfo, nil
-
 }
 
-// Match function go through the rules list with data from URL
+// Match function goes through the rules list with data from URL
 // looking for any matching rule. Makes a new list of matched rules
 func (r *RulesFromJSON) Match(rules []types.Rule, data []types.LoreData) []types.Rule {
 	var matched []types.Rule
@@ -63,7 +62,7 @@ func (r *RulesFromJSON) One(rule types.Rule, data types.LoreData) bool {
 		if rule.Rule == "gt" && rule.Price < data.Price {
 			return true
 		}
-		if rule.Rule == "lw" && rule.Price > data.Price {
+		if rule.Rule == "lt" && rule.Price > data.Price {
 			return true
 		}
 	}
@@ -81,5 +80,6 @@ func (r *RulesFromJSON) SaveRules(updatedRules []types.Rule) error {
 	if tofile, err = json.Marshal(updatedRules); err != nil {
 		return err
 	}
+
 	return ioutil.WriteFile(r.Path, tofile, 0644)
 }

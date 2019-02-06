@@ -34,13 +34,13 @@ func TestMatch(t *testing.T) {
 					RuleID: 1,
 					ID:     "80",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 				{
 					RuleID: 2,
 					ID:     "91",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 			},
 			data: []types.LoreData{
@@ -81,13 +81,13 @@ func TestMatch(t *testing.T) {
 					RuleID: 1,
 					ID:     "80",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 				{
 					RuleID: 2,
 					ID:     "91",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 			},
 			data: []types.LoreData{
@@ -118,13 +118,13 @@ func TestMatch(t *testing.T) {
 					RuleID: 1,
 					ID:     "80",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 				{
 					RuleID: 2,
 					ID:     "91",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 			},
 		},
@@ -140,13 +140,13 @@ func TestMatch(t *testing.T) {
 					RuleID: 1,
 					ID:     "80",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 				{
 					RuleID: 2,
 					ID:     "91",
 					Price:  3000.01,
-					Rule:   "lw",
+					Rule:   "lt",
 				},
 			},
 			data: []types.LoreData{
@@ -201,7 +201,7 @@ func TestOne(t *testing.T) {
 			rule: types.Rule{
 				ID:    "90",
 				Price: 2222.22,
-				Rule:  "lw",
+				Rule:  "lt",
 			},
 			data: types.LoreData{
 				ID:    "80",
@@ -215,7 +215,7 @@ func TestOne(t *testing.T) {
 			rule: types.Rule{
 				ID:    "80",
 				Price: 110.22,
-				Rule:  "lw",
+				Rule:  "lt",
 			},
 			data: types.LoreData{
 				ID:    "80",
