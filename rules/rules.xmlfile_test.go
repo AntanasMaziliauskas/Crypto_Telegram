@@ -11,9 +11,8 @@ import (
 func TestReadRulesXML(t *testing.T) {
 
 	ts := &rules.RulesFromXML{
-		Path: "rules.xml",
+		Path: "../test.xml",
 	}
-	//	ts.Path = "rules.xml"
 
 	expectRules := []types.Rule{
 		{
@@ -35,7 +34,7 @@ func TestReadRulesXML(t *testing.T) {
 			ID:       "91",
 			Price:    3470.98,
 			Rule:     "lt",
-			Notified: true,
+			Notified: false,
 		},
 		{
 			RuleID:   3,

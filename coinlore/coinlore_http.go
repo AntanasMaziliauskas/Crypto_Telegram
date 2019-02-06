@@ -65,9 +65,7 @@ func (c *CoinloreAPI) FetchAll(ids []string) ([]types.LoreData, error) {
 
 			return nil, err
 		}
-		//TODO: Sita vieta kazkas negerai
 		if len(CrypJSON) < 1 {
-			//	err = errors.New("Json empty")
 
 			return DataFromURL, err
 		}

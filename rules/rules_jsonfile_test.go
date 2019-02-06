@@ -13,6 +13,47 @@ func TestImplements(t *testing.T) {
 	assert.Implements(t, (*rules.RulesService)(nil), &rules.RulesFromJSON{})
 }
 
+func TestReadRules(t *testing.T) {
+
+	ts := &rules.RulesFromJSON{
+		Path: "../test.json",
+	}
+
+	expectRules := []types.Rule{
+		{
+			RuleID:   0,
+			ID:       "90",
+			Price:    3470.98,
+			Rule:     "lt",
+			Notified: false,
+		},
+		{
+			RuleID:   1,
+			ID:       "90",
+			Price:    3070.98,
+			Rule:     "gt",
+			Notified: false,
+		},
+		{
+			RuleID:   2,
+			ID:       "91",
+			Price:    100000.223,
+			Rule:     "lt",
+			Notified: false,
+		},
+		{
+			RuleID:   3,
+			ID:       "92",
+			Price:    100000.223,
+			Rule:     "lt",
+			Notified: false,
+		},
+	}
+	result, _ := ts.ReadRules()
+	assert.Equal(t, result, expectRules)
+
+}
+
 func TestMatch(t *testing.T) {
 
 	ts := rules.RulesFromJSON{}
