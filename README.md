@@ -87,7 +87,7 @@ First of all you should create a file with rules. You can provide two types of f
  ruleid|Used for identifying specific rule
  id|This is a specific coin ID used for URL address
  price|Price of a coin (USD)
- rule|Can only hold greater than (gt) or lower than (lt) values
+ rule|Can only hold greater than (gt) or less than (lt) values
  notified|Used to mark rules that has been satisfied
  
 When file is read, rules are being checked against the information received from the [CoinLore](https://www.coinlore.com). Every rule that is satiesfied is being placed into a new list of rules.
