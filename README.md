@@ -6,7 +6,7 @@ Crypto Telegram is designed to get the information of the specific crypto curren
 
 ## Crypto Currency Rates
 
-Info of where i get it from
+Rates are received from [CoinLore][a]
 
 ## Rules
 
@@ -15,3 +15,5 @@ info about file types and rules template
 ## Telegram Bot
 
 info about what does telegram bot do
+
+[a]: <https://www.coinlore.com/>
