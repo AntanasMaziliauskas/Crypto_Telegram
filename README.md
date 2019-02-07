@@ -11,6 +11,7 @@ Rates are received from [CoinLore][a]. It uses URL address to get information fo
 Example: https://api.coinlore.com/api/ticker/?id=90
 
 This is the example of JSON you get:
+
 [
   {
     "id": "90",
