@@ -11,7 +11,7 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 )
 
-//CoinloreAPI struct
+//CoinloreAPI structure holds source URL address and implements CoinloreService interface
 type CoinloreAPI struct {
 	sourceURL string
 }
