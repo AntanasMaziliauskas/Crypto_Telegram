@@ -7,9 +7,8 @@ Crypto Telegram is designed to get the information of the specific crypto curren
 ## Crypto Currency Rates
 
 Rates are received from [CoinLore][a]. It uses URL address to get information for specific coin.
-Example: https://api.coinlore.com/api/ticker/?id=90
+URL example: https://api.coinlore.com/api/ticker/?id=90
 This is the example of JSON you get:
-
 [
   {
     "id": "90",
