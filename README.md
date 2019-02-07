@@ -31,12 +31,13 @@ Crypto Telegram is designed to get the information of the specific crypto curren
   }
 ]         
 ```
+
 ## Rules
 
-You can provide two types of files for the list of rules:
+First of all you should create a file with rules. You can provide two types of files for the list of rules:
  - JSON
  - XML
-JSON example:
+> JSON example:
 ```
 [
 {"RuleID":0,"id":"90","price":3470.98,"rule":"lt","notified":false},
@@ -45,7 +46,7 @@ JSON example:
 {"RuleID":3,"id":"92","price":100000.223,"rule":"lt","notified":false}
 ]
 ```
- XML example:
+> XML example:
  ```
  <rules>
     <rule>
@@ -78,10 +79,31 @@ JSON example:
     </rule>
 </rules>
  ```
+ 
+ Meaning of these fields:
+ 
+ Name | Comment
+ ------------|--------------
+ ruleid|Used for identifying specific rule
+ id|This is a specific coin ID used for URL address
+ price|Price of a coin (USD)
+ rule|Can only hold greater than (gt) or lower than (lt) values
+ notified|Used to mark rules that has been satisfied
+ 
 When file is read, rules are being checked against the information received from the CoinLore. Every rule that is satiesfied is being placed into a new list of rules.
 
 ## Telegram Bot
 
-Whenever there is a satisfied rule from the list Telegram bot provides information about the coin price and lets us know if it increased or decreased according to that rule.
+Whenever there is a satisfied rule from the list Telegram bot provides information about the coin price and send a message to a channel if it increased or decreased according to that rule.
 
-[a]: <https://www.coinlore.com/>
+For more information on Telegram bots please visit https://core.telegram.org/bots
+
+## Help
+
+To star the program you have to enter ```go run main.go```
+
+You can provide these arguments:
+* Path with the file name(default value is 'rule'): ```go run main.go -path=rules```
+* Type of the file(default value is 'false' for JSON) :```go run main.go -type``` - for the XML
+* Token: ```go run main.go -token='bot_token'```
+* Channel name(default value is '@CryptTelegram'): ```go run main.go -channel=@CryptTelegram```
