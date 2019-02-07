@@ -6,7 +6,7 @@ Crypto Telegram is designed to get the information of the specific crypto curren
 
 ## Crypto Currency Rates
 
-- Rates are received from [CoinLore][a]. It uses URL address to get information for specific coin.
+- Rates are received from [CoinLore](https://www.coinlore.com) It uses URL address to get information for specific coin.
 - URL example: https://api.coinlore.com/api/ticker/?id=90
 - This is the example of JSON you get:
 ```sh
@@ -90,7 +90,7 @@ First of all you should create a file with rules. You can provide two types of f
  rule|Can only hold greater than (gt) or lower than (lt) values
  notified|Used to mark rules that has been satisfied
  
-When file is read, rules are being checked against the information received from the CoinLore. Every rule that is satiesfied is being placed into a new list of rules.
+When file is read, rules are being checked against the information received from the [CoinLore](https://www.coinlore.com). Every rule that is satiesfied is being placed into a new list of rules.
 
 ## Telegram Bot
 
@@ -104,6 +104,6 @@ To star the program you have to enter ```go run main.go```
 
 You can provide these arguments:
 * Path with the file name(default value is 'rule'): ```go run main.go -path=rules```
-* Type of the file(default value is 'false' for JSON) :```go run main.go -type``` - for the XML
+* Type of the file(default value is 'false' for JSON) :```go run main.go -type``` for the XML
 * Token: ```go run main.go -token='bot_token'```
 * Channel name(default value is '@CryptTelegram'): ```go run main.go -channel=@CryptTelegram```
