@@ -80,7 +80,7 @@ First of all you should create a file with rules. You can provide two types of f
 </rules>
  ```
  
- Meaning of these fields:
+ Meaning of the fields:
  
  Name | Comment
  ------------|--------------
