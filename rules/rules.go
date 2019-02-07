@@ -5,7 +5,7 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 )
 
-//RulesService interface
+//RulesService is the interface that wraps Init, ReadRules, SaveRules, Match and One methods
 type RulesService interface {
 	Init() error
 	ReadRules() ([]types.Rule, error)

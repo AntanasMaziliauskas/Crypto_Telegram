@@ -8,12 +8,12 @@ import (
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 )
 
-//RulesFromXML structure
+//RulesFromXML structure holds path of file and implements RulesService interface
 type RulesFromXML struct {
 	Path string
 }
 
-//XML structure
+//XML structure holds the name of XML content and the structure of file content
 type XML struct {
 	XMLName xml.Name     `xml:"rules"`
 	Rules   []types.Rule `xml:"rule"`

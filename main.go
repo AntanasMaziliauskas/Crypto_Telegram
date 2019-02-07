@@ -52,4 +52,6 @@ func main() {
 
 	<-stop
 
+	app.Stop()
+
 }

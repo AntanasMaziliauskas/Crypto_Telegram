@@ -1,8 +1,11 @@
 package application
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"os"
+	"sync"
 	"time"
 
 	"github.com/AntanasMaziliauskas/Crypto_Telegram/coinlore"
@@ -12,19 +15,25 @@ import (
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-//App struct
+//App struct holds information about bot, msg and stop channels, ctx and cancel contexts
+//wg waitgroup. It also holds token and channel name. Implements RuleService and CoinloreService interfaces.
 type App struct {
 	bot     *telegram.BotAPI
 	msg     chan string
+	stop    chan os.Signal
+	ctx     context.Context
+	cancel  context.CancelFunc
+	wg      *sync.WaitGroup
 	Token   string
 	Channel string
 	Rules   rules.RulesService
 	LoreAPI coinlore.CoinloreService
 }
 
-//Stop Funkcija --->>STOP TOTO: kaip turi atrodyti?
+//Stop function's responsibility is to close go routines after the program is stopped
 func (a *App) Stop() {
-
+	a.cancel()
+	a.wg.Wait()
 }
 
 //Authenticate function authenticates Telegram bot with the given token
@@ -43,6 +52,8 @@ func (a *App) Init() error {
 	var err error
 
 	a.msg = make(chan string)
+	a.wg = &sync.WaitGroup{}
+	a.ctx, a.cancel = context.WithCancel(context.Background())
 
 	if err = a.LoreAPI.Init(); err != nil {
 		return err
@@ -74,7 +85,7 @@ func (a *App) PriceCheckTicker() {
 		rulesList   []types.Rule
 		dataFromAPI []types.LoreData
 	)
-
+	a.wg.Add(1)
 	ticker := time.NewTicker(1 * time.Minute)
 	for {
 		select {
@@ -104,6 +115,11 @@ func (a *App) PriceCheckTicker() {
 			if err = a.Rules.SaveRules(updatedRules); err != nil {
 				log.Println(err)
 			}
+		case <-a.ctx.Done():
+			log.Println("PriceChekeTicker has stopped")
+			a.wg.Done()
+
+			return
 		}
 	}
 }
@@ -111,10 +127,16 @@ func (a *App) PriceCheckTicker() {
 //TelegramBotTicker function receives message from the channel
 //Uses sendToTelegram function to send a message.
 func (a *App) TelegramBotTicker() {
+	a.wg.Add(1)
 	for {
 		select {
 		case text := <-a.msg:
 			a.sendToTelegram(text)
+		case <-a.ctx.Done():
+			log.Println("TelegramBotTicker has stopped")
+			a.wg.Done()
+
+			return
 		}
 	}
 }

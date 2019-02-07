@@ -6,7 +6,7 @@ import "github.com/AntanasMaziliauskas/Crypto_Telegram/types"
 //It needs ID to be added to make it valid
 const URL = "https://api.coinlore.com/api/ticker/?id=%s"
 
-//CoinloreService interface
+//CoinloreService is the interface that wraps Init, Fetchall and FetchOne methods
 type CoinloreService interface {
 	Init() error
 	FetchAll(ids []string) ([]types.LoreData, error)
